@@ -8,6 +8,7 @@ function App() {
   const [balance, setBalance] = useState("");
   const [winner, setWinner] = useState("");
   const [user, setUser] = useState("");
+  const [connected, setConnected] = useState(false);
   const contractAddress = "0x9d3e1f0c6a4759134c37ed7659c2bc2b44eb3f0f";
 
   let provider = typeof window !== "undefined" && window.ethereum;
@@ -50,7 +51,6 @@ function App() {
       const web3 = new Web3(provider);
       const balance = await web3.eth.getBalance(contractAddress);
       const balanceWei = web3.utils.fromWei(balance, "ether");
-      console.log(balanceWei);
       setBalance(balanceWei);
     } catch (error) {
       console.error(error);
@@ -76,50 +76,89 @@ function App() {
   };
 
   const pickWinner = async () => {
+    let tries = true;
     try {
       const contract = getContract();
+      await contract.methods.pickWinner().call({ from: user });
+    } catch (err) {
+      const errorMessage =
+        err.data || "You are not the Owner or Not enough Players";
+      tries = false;
+      alert(errorMessage);
+    }
+    if (tries) {
+      const contract = getContract();
       await contract.methods.pickWinner().send({ from: user });
-      const winner = await contract.methods.winner().call();
-      console.log(winner);
-      setWinner(winner);
+      getWinner();
       getPlayers();
       getBalance();
-    } catch (error) {
-      console.error(error);
     }
   };
 
+  const getWinner = async () => {
+    const contract = getContract();
+    const winner = await contract.methods.winner().call();
+    setWinner(winner);
+  };
+
   useEffect(() => {
-    connectMeta();
     getPlayers();
     getBalance();
+    getWinner();
   }, []);
+
+  function connectWallet() {
+    connectMeta();
+    setConnected(true);
+  }
+  function disconnect() {
+    setConnected(false);
+    setUser("");
+  }
 
   return (
     <div>
       <h1>Lottery DApp</h1>
-      <div className="container">
-        <p className="address">Contract Address: {contractAddress}</p>
-        <p className="address">User Address: {user}</p>
-        <p>Number of Players: {players.length}</p>
-        <p>Contract Balance: {balance} MATIC</p>
-        <p>Last Winner: {winner}</p>
+      <div className="connect" onClick={connectWallet}>
+        {connected ? user.slice(0, 4) + "..." + user.slice(38) : "Connect"}
+      </div>
 
-        <button className="button" onClick={buyTicket}>
-          Buy Ticket
-        </button>
-        <button className="button" onClick={pickWinner}>
-          Pick Winner
-        </button>
-      </div>
-      <div className="players">
-        <h3>Players:</h3>
-        <ul>
-          {players.map((player, index) => (
-            <li key={index}>{player}</li>
-          ))}
-        </ul>
-      </div>
+      {connected ? (
+        <>
+          <div className="container">
+            <p className="address">Contract Address: {contractAddress}</p>
+            <p>Number of Players: {players.length}</p>
+            <p>Contract Balance: {balance} MATIC</p>
+            <p>Last Winner: {winner}</p>
+
+            <button className="button" onClick={buyTicket}>
+              Buy Ticket
+            </button>
+            <button className="button" onClick={pickWinner}>
+              Pick Winner
+            </button>
+          </div>
+          <div className="players">
+            <h3>Players:</h3>
+            <ul>
+              {players.map((player, index) => (
+                <li key={index}>{player}</li>
+              ))}
+            </ul>
+          </div>
+        </>
+      ) : (
+        <>
+          <div className="container">
+            <h3>Please connect wallet</h3>
+          </div>
+          <div className="container">
+            "(If you want to change account, go to metamask, disconnect this
+            account and select the account you want to connect. Finally refresh
+            the page. )"
+          </div>
+        </>
+      )}
     </div>
   );
 }

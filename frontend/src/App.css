@@ -8,8 +8,71 @@ body {
   background-size: 400% 400%;
   animation: gradient 15s ease infinite;
 }
-div {
-  color: #ffffff;
+
+.container {
+  text-align: center;
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 20px;
+}
+
+h1 {
+  text-align: center;
+}
+
+p {
+  margin: 35px;
+}
+
+.connect {
+  padding: 10px 20px;
+  font-size: 16px;
+  background-color: #1540cb;
+  color: #fff;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  position: absolute;
+  top: 10px;
+  right: 10px;
+}
+
+.connect:hover {
+  background-color: #0a2d91;
+}
+
+.address {
+  font-size: large;
+}
+
+.button {
+  padding: 10px 20px;
+  font-size: 16px;
+  background-color: #4caf50;
+  color: #fff;
+  border: none;
+  cursor: pointer;
+  margin: 10px;
+}
+
+.button:hover {
+  background-color: #45a049;
+}
+
+.players {
+  text-align: center;
+}
+
+ul {
+  padding: 0;
+  list-style-type: none;
+}
+
+li {
+  margin-bottom: 5px;
+  padding: 10px;
+  border-radius: 5px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 @keyframes gradient {
   0% {
@@ -21,54 +84,4 @@ div {
   100% {
     background-position: 0% 50%;
   }
-}
-
-.container {
-  text-align: center;
-  max-width: 800px;
-  margin: 0 auto;
-  padding: 20px;
-}
-
-.address {
-  font-size: large;
-}
-
-h1 {
-  text-align: center;
-}
-p {
-  margin: 35px;
-}
-
-.button {
-  padding: 10px 20px;
-  font-size: 16px;
-  background-color: #4caf50;
-  color: #fff;
-  border: none;
-  cursor: pointer;
-  /* margin-top: 10px; */
-  margin: 10px;
-}
-
-.button:hover {
-  background-color: #45a049;
-}
-
-ul {
-  padding: 0;
-  list-style-type: none;
-}
-
-li {
-  margin-bottom: 5px;
-  /* background-color: #fff; */
-  padding: 10px;
-  border-radius: 5px;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-}
-
-.players {
-  text-align: center;
 }
